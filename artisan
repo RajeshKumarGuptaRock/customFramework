@@ -1,0 +1,32 @@
+
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+
+use App\Commands\RouteCacheCommand;
+use App\Commands\RouteClearCommand;
+
+use App\Commands\MakeWebSiteCommand;
+
+use App\Commands\RunMigrationCommand;
+use App\Commands\MakeMigrationCommand;
+use App\Commands\RefreshMigrationCommand;
+use Symfony\Component\Console\Application;
+
+
+$application = new Application();
+$application->add(new MakeMigrationCommand());
+$application->add(new RunMigrationCommand());
+$application->add(new RefreshMigrationCommand());
+
+$application->add(new MakeWebSiteCommand());
+
+$application->add(new RouteClearCommand());
+$application->add(new RouteCacheCommand());
+
+// Handle aliasing
+$argv = $_SERVER['argv'] ?? [];
+if (isset($argv[1]) && $argv[1] === 'migrate') {
+    $argv[1] = 'roza:migrate';
+}
+$application->run();
